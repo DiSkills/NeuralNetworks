@@ -16,3 +16,14 @@ class Neuron:
 
     def __call__(self, input: list[float]) -> float:
         return sum(self.weights[i] * input[i] for i in range(len(input)))
+
+
+class Network:
+    def __init__(self, input_size: int, number_of_neurons: int):
+        self.neurons = [Neuron.create(input_size) for _ in range(number_of_neurons)]
+
+    def __call__(self, input: list[float]) -> list[float]:
+        u = [neuron(input) for neuron in self.neurons]
+        y = [0] * len(u)
+        y[u.index(max(u))] = 1
+        return y
