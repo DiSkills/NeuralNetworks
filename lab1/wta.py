@@ -15,7 +15,7 @@ class Neuron:
         return cls(normalize([random() for _ in range(size)]))
 
     def __call__(self, input: list[float]) -> float:
-        return sum(self.weights[i] * input[i] for i in range(len(input)))
+        return sum(w * i for w, i in zip(self.weights, input))
 
     def train(self, input: list[float], eta: float):
-        self.weights = [self.weights[i] + eta * (input[i] - self.weights[i]) for i in range(len(input))]
+        self.weights = [w + eta * (i - w) for w, i in zip(self.weights, input)]

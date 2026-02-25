@@ -1,3 +1,4 @@
+from lab1.hebbian import HebbianNeuron
 from lab1.penalty import PenaltyNeuron
 from lab1.wta import Neuron
 
@@ -31,7 +32,7 @@ def task(neuron: type[Neuron]):
 
 
 def main():
-    for neuron in Neuron, PenaltyNeuron:
+    for neuron in Neuron, PenaltyNeuron, HebbianNeuron:
         print('=' * 100)
         task(neuron)
 
