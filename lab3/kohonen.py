@@ -59,14 +59,24 @@ class Network:
 
 
 def analyze(network: Network, raw_dataset: list[list[float | str]], dataset: list[list[float]]) -> None:
-    summary = defaultdict(list)
+    summary: dict[int, list[list]] = defaultdict(list)
 
     for raw, row in zip(raw_dataset, dataset):
         cluster = network.winner(row)
-        summary[cluster].append(raw[-1])
+        summary[cluster].append(raw)
 
-    for cluster, scholarships in summary.items():
-        print(f"Cluster {cluster + 1}: Average scholarship = {sum(scholarships) / len(scholarships):.2f}")
+    for cluster in sorted(summary):
+        members = summary[cluster]
+        scholarships = [r[-1] for r in members]
+        avg = sum(scholarships) / len(scholarships)
+        receives = sum(1 for s in scholarships if s > 0)
+        names = ", ".join(r[1] for r in members)
+        conclusion = "получают стипендию" if receives == len(members) else (
+            "не получают стипендию" if receives == 0 else
+            f"частично получают стипендию ({receives} из {len(members)})"
+        )
+        print(f"Кластер {cluster + 1} ({len(members)} чел.): {names}")
+        print(f"Средний коэф. стипендии: {avg:.2f} — {conclusion}\n")
 
 
 def main():
