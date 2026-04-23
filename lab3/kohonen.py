@@ -1,8 +1,9 @@
 import math
 import random
+from collections import defaultdict
 
 
-def convert(raw: list[str | float]) -> list[int]:
+def convert(raw: list[str | float]) -> list[float]:
     return [
         1 if raw[2] == "М" else 0,
         1 if raw[3] == "Да" else 0,
@@ -57,6 +58,17 @@ class Network:
             learning_rate -= step
 
 
+def analyze(network: Network, raw_dataset: list[list[float | str]], dataset: list[list[float]]) -> None:
+    summary = defaultdict(list)
+
+    for raw, row in zip(raw_dataset, dataset):
+        cluster = network.winner(row)
+        summary[cluster].append(raw[-1])
+
+    for cluster, scholarships in summary.items():
+        print(f"Cluster {cluster + 1}: Average scholarship = {sum(scholarships) / len(scholarships):.2f}")
+
+
 def main():
     network = Network(7, 4)
 
@@ -85,8 +97,7 @@ def main():
     dataset = linear_normalize([convert(row) for row in raw_dataset], 7)
 
     network.train(dataset, 0.3, 0.05)
-    for i in range(len(raw_dataset)):
-        print(network.winner(dataset[i]), dataset[i][-1], raw_dataset[i][-1])
+    analyze(network, raw_dataset, dataset)
 
 
 if __name__ == "__main__":
